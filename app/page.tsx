@@ -17,8 +17,8 @@ export default function Home() {
               <span className="font-display font-bold text-white">His</span>
               <WordRotator />
             </div>
-            <p className="text-white/50 tracking-[0.25em] text-sm md:text-base mt-6">
-              인랜드 히즈 청년부 · 오후 1:45 예배
+            <p className="text-white/60 tracking-[0.25em] text-sm md:text-base mt-6" style={{ fontWeight: 500 }}>
+              <strong>인랜드교회 히즈청년부 · 오후 1:45 예배</strong>
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 mt-10">
