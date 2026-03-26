@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 export default function PrivacyPolicy() {
   return (
     <div
-      className="max-w-4xl mx-auto px-4 py-8"
+      className="max-w-4xl mx-auto px-6 py-16 md:py-24"
       dangerouslySetInnerHTML={{ __html: `<style>
     [data-custom-class='body'], [data-custom-class='body'] * {
             background: transparent !important;

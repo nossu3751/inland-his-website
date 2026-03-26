@@ -1,0 +1,18 @@
+[
+  {
+    "name": "목자",
+    "photo": "/photos/teams/목자.png"
+  },
+  {
+    "name": "찬양팀",
+    "photo": "/photos/teams/찬양팀.jpg"
+  },
+  {
+    "name": "미디어팀",
+    "photo": "/photos/teams/미디어팀.png"
+  },
+  {
+    "name": "인리치팀",
+    "photo": "/photos/teams/인리치팀.png"
+  }
+]

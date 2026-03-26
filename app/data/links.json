@@ -1,0 +1,25 @@
+{
+  "social": [
+    {
+      "name": "YouTube",
+      "url": "https://www.youtube.com/@inland_his",
+      "icon": "youtube"
+    },
+    {
+      "name": "Instagram",
+      "url": "https://instagram.com/inlandhisministry",
+      "icon": "instagram"
+    },
+    {
+      "name": "Facebook",
+      "url": "https://facebook.com/groups/161659807316928",
+      "icon": "facebook"
+    }
+  ],
+  "external": [
+    {
+      "name": "인랜드교회",
+      "url": "https://www.inlandpca.com/"
+    }
+  ]
+}
