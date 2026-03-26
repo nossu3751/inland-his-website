@@ -46,15 +46,13 @@ export default function Home() {
               <Image src="/apple-logo.png" alt="Apple" width={18} height={18} className="w-[18px] h-[18px]" />
               App Store
             </a>
-            {/* <a
-              href="https://play.google.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-white/10 text-white text-sm px-4 py-2 rounded-lg hover:bg-white/20 transition-colors"
-            >
-              <Image src="/play-logo.png" alt="Google Play" width={18} height={18} className="w-[18px] h-[18px]" />
+            <span className="relative inline-flex items-center gap-2 bg-white/5 text-white/30 text-sm px-4 py-2 rounded-lg cursor-not-allowed select-none">
+              <Image src="/play-logo.png" alt="Google Play" width={18} height={18} className="w-[18px] h-[18px] opacity-30" />
               Play Store
-            </a> */}
+              <span className="absolute -top-2 -right-2 text-[10px] font-semibold bg-primary/80 text-white px-1.5 py-0.5 rounded-full leading-none">
+                Soon
+              </span>
+            </span>
           </div>
         </div>
       </section>
