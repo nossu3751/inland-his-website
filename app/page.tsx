@@ -21,6 +21,7 @@ export default function Home() {
                 className="w-full h-auto"
               >
                 <source src="/hero_animation.webm" type="video/webm" />
+                <source src="/hero_animation.mp4" type="video/mp4" />
               </video>
             </div>
           </div>
