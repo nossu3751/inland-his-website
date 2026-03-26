@@ -48,6 +48,30 @@
   font-weight: 400;
   font-display: swap;
 }
+@font-face {
+  font-family: "LTCushion";
+  src: url("/fonts/LTCushion-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  font-family: "LTCushion";
+  src: url("/fonts/LTCushion-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: "LTCushion";
+  src: url("/fonts/LTCushion-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "LTCushion";
+  src: url("/fonts/LTCushion-Black.ttf") format("truetype");
+  font-weight: 900;
+  font-display: swap;
+}
 
 :root {
   --background: #0d0518;
@@ -59,6 +83,7 @@
   --color-foreground: var(--foreground);
   --font-sans: "SUITE", system-ui, -apple-system, sans-serif;
   --font-serif: "RIDIBatang", serif;
+  --font-display: "LTCushion", serif;
 
   --color-primary: #8A2BE2;
   --color-primary-muted: #B19DD9;
@@ -111,3 +136,4 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #8A2BE2;
 }
+

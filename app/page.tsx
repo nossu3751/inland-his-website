@@ -1,6 +1,7 @@
 import Image from "next/image";
 import people from "./data/people.json";
 import teams from "./data/teams.json";
+import { WordRotator } from "./components/WordRotator";
 
 export default function Home() {
   const pastor = people[0];
@@ -10,20 +11,15 @@ export default function Home() {
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-b from-[#2d1054] via-[#1a0a2e] to-[#0d0518] text-white">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/20 via-transparent to-transparent" />
-        <div className="relative max-w-5xl mx-auto px-6 py-24 md:py-36 flex flex-col items-center">
-          <div className="w-64 md:w-80 lg:w-96">
-            <div className="relative rounded-3xl overflow-hidden">
-              <video
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="w-full h-auto"
-              >
-                <source src="/hero_animation.webm" type="video/webm" />
-                <source src="/hero_animation.mp4" type="video/mp4" />
-              </video>
+        <div className="relative max-w-5xl mx-auto px-6 py-32 md:py-44 flex flex-col items-center">
+          <div className="text-center leading-none">
+            <div className="flex items-baseline justify-center gap-3 md:gap-5 text-5xl md:text-7xl lg:text-8xl">
+              <span className="font-display font-bold text-white">His</span>
+              <WordRotator />
             </div>
+            <p className="text-white/50 tracking-[0.25em] text-sm md:text-base mt-6">
+              인랜드 히즈 청년부 · 오후 1:45 예배
+            </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 mt-10">
             <a
