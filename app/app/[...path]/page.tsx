@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { getPublicEventTitle, getPublicPostTitle } from "./lookup";
 
 // HIS 앱 공유 링크가 도착하는 페이지.
 //   https://www.inlandhis.com/app/post/<게시글 id>
@@ -20,25 +21,35 @@ type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-type Target = { label: string; deepLink: string };
+// title: 전체공개 글·공개 일정일 때만 (그 밖에는 null → 일반 문구)
+type Target = { label: string; deepLink: string; title: string | null };
 
 const first = (value: string | string[] | undefined) =>
   Array.isArray(value) ? value[0] : value;
 
-function resolveTarget(
+async function resolveTarget(
   path: string[],
   search: { [key: string]: string | string[] | undefined },
-): Target | null {
+): Promise<Target | null> {
   if (path[0] === "post" && path.length === 2 && ID_PATTERN.test(path[1])) {
-    return { label: "게시글", deepLink: `${APP_SCHEME}:///post/${path[1]}` };
+    return {
+      label: "게시글",
+      deepLink: `${APP_SCHEME}:///post/${path[1]}`,
+      title: await getPublicPostTitle(path[1]),
+    };
   }
   if (path[0] === "event" && path.length === 1) {
     const id = first(search.id);
     const eventId = first(search.eventId);
     if (!id || !ID_PATTERN.test(id)) return null;
     const query = new URLSearchParams({ id });
-    if (eventId && ID_PATTERN.test(eventId)) query.set("eventId", eventId);
-    return { label: "일정", deepLink: `${APP_SCHEME}:///event?${query}` };
+    const hasEventId = !!eventId && ID_PATTERN.test(eventId);
+    if (hasEventId) query.set("eventId", eventId);
+    return {
+      label: "일정",
+      deepLink: `${APP_SCHEME}:///event?${query}`,
+      title: hasEventId ? await getPublicEventTitle(eventId) : null,
+    };
   }
   return null;
 }
@@ -47,9 +58,13 @@ export async function generateMetadata({
   params,
   searchParams,
 }: Props): Promise<Metadata> {
-  const target = resolveTarget((await params).path, await searchParams);
-  const title = target ? `HIS 앱에서 ${target.label} 보기` : "HIS 앱";
-  const description = "인랜드 히즈 청년부 앱에서 열어보세요.";
+  const target = await resolveTarget((await params).path, await searchParams);
+  const title = target
+    ? (target.title ?? `HIS 앱에서 ${target.label} 보기`)
+    : "HIS 앱";
+  const description = target?.title
+    ? `HIS 앱에 올라온 ${target.label}이에요. 눌러서 앱에서 열어보세요.`
+    : "인랜드 히즈 청년부 앱에서 열어보세요.";
   return {
     metadataBase: new URL("https://www.inlandhis.com"),
     title,
@@ -66,7 +81,7 @@ export async function generateMetadata({
 }
 
 export default async function OpenInAppPage({ params, searchParams }: Props) {
-  const target = resolveTarget((await params).path, await searchParams);
+  const target = await resolveTarget((await params).path, await searchParams);
   if (!target) notFound();
 
   return (
@@ -83,6 +98,11 @@ export default async function OpenInAppPage({ params, searchParams }: Props) {
         <h1 className="mt-6 text-2xl font-bold tracking-tight">
           HIS 앱에서 {target.label} 보기
         </h1>
+        {target.title && (
+          <p className="mt-4 w-full rounded-xl bg-white/10 px-4 py-3 text-base font-semibold text-white leading-snug">
+            {target.title}
+          </p>
+        )}
         <p className="mt-3 text-white/60 leading-relaxed">
           아래 버튼을 누르면 HIS 앱에서 이 {target.label}이 바로 열려요.
         </p>
