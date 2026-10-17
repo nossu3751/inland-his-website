@@ -1,0 +1,13 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "NVQF2F83RD.com.inlandhisapp",
+        "appIDs": ["NVQF2F83RD.com.inlandhisapp"],
+        "paths": ["/app/*"],
+        "components": [{ "/": "/app/*", "comment": "히즈앱 공유 링크 (게시글 · 일정)" }]
+      }
+    ]
+  }
+}

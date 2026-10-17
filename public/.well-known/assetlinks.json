@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.inlandhisapp",
+      "sha256_cert_fingerprints": [
+        "29:44:2B:BC:3B:73:8F:DF:37:54:06:E4:81:C7:23:27:1F:0D:CC:0A:B6:B0:DE:3D:9F:18:B2:7F:E7:D1:AF:9A",
+        "FF:CD:28:05:0D:74:79:0B:1D:BA:5F:DF:56:6C:BF:09:E3:40:53:26:B3:05:D3:92:6A:72:1E:E4:04:42:B5:2C"
+      ]
+    }
+  }
+]
