@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PaperPage } from "../components/PaperPage";
 
 export const metadata: Metadata = {
   title: "Delete Account - Inland His Church",
@@ -6,9 +7,9 @@ export const metadata: Metadata = {
     "Learn how to delete your account on the HIS App by Inland His Church",
 };
 
-export default function DeleteAccount() {
+function DeleteAccountBody() {
   return (
-    <div className="max-w-2xl mx-auto px-6 py-16 md:py-24">
+    <div className="mx-auto max-w-2xl">
       <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-800 mb-4">
         Delete Your Account
       </h1>
@@ -86,5 +87,13 @@ export default function DeleteAccount() {
         </p>
       </section>
     </div>
+  );
+}
+
+export default function DeleteAccount() {
+  return (
+    <PaperPage light homeLabel="Home">
+      <DeleteAccountBody />
+    </PaperPage>
   );
 }

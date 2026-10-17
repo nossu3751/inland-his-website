@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getPublicEventTitle, getPublicPostTitle } from "./lookup";
+import { PaperPage } from "../../components/PaperPage";
 
 // HIS 앱 공유 링크가 도착하는 페이지.
 //   https://www.inlandhis.com/app/post/<게시글 id>
@@ -85,74 +86,35 @@ export default async function OpenInAppPage({ params, searchParams }: Props) {
   if (!target) notFound();
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-[#2d1054] via-[#1a0a2e] to-[#0d0518] text-white">
-      <div className="max-w-md mx-auto px-6 pt-32 pb-24 flex flex-col items-center text-center">
-        <Image
-          src="/favicon/web-app-manifest-192x192.png"
-          alt="HIS 앱"
-          width={80}
-          height={80}
-          className="w-20 h-20 rounded-2xl"
-          priority
-        />
-        <h1 className="mt-6 text-2xl font-bold tracking-tight">
-          HIS 앱에서 {target.label} 보기
-        </h1>
+    <PaperPage>
+      <div className="mx-auto flex max-w-md flex-col items-center text-center">
+        <Image src="/app/app-icon.png" alt="HIS 앱" width={96} height={96} className="size-24 rounded-[22px] shadow-[0_12px_24px_-12px_rgb(31_26_41/0.5)]" priority />
+        <h1 className="page-title mt-7 text-[30px]">HIS 앱에서 {target.label} 보기</h1>
         {target.title && (
-          <p className="mt-4 w-full rounded-xl bg-white/10 px-4 py-3 text-base font-semibold text-white leading-snug">
-            {target.title}
-          </p>
+          <p className="mt-5 w-full rounded-2xl bg-[var(--paper)] px-5 py-4 font-serif text-[18px] leading-relaxed">{target.title}</p>
         )}
-        <p className="mt-3 text-white/60 leading-relaxed">
-          아래 버튼을 누르면 HIS 앱에서 이 {target.label}이 바로 열려요.
+        <p className="mt-4 text-[16px] leading-relaxed text-[var(--soft)]">
+          아래 단추를 누르면 HIS 앱에서 이 {target.label}이 바로 열려요.
         </p>
-
-        <a
-          href={target.deepLink}
-          className="mt-8 w-full inline-flex items-center justify-center rounded-xl bg-primary px-6 py-4 text-base font-bold text-white hover:bg-primary/90 transition-colors"
-        >
+        <a href={target.deepLink} className="btn btn-primary mt-8 w-full justify-center text-[17px]">
           HIS 앱에서 열기
         </a>
 
-        <div className="mt-10 w-full border-t border-white/10 pt-8">
-          <p className="text-sm text-white/50">아직 앱이 없다면</p>
-          <div className="mt-4 flex flex-col sm:flex-row gap-3 justify-center">
-            <a
-              href={APP_STORE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 bg-white/10 text-white text-sm px-4 py-3 rounded-lg hover:bg-white/20 transition-colors"
-            >
-              <Image
-                src="/apple-logo.png"
-                alt=""
-                width={18}
-                height={18}
-                className="w-[18px] h-[18px]"
-              />
-              App Store에서 받기
-            </a>
-            <span className="relative inline-flex items-center justify-center gap-2 bg-white/5 text-white/30 text-sm px-4 py-3 rounded-lg cursor-not-allowed select-none">
-              <Image
-                src="/play-logo.png"
-                alt=""
-                width={18}
-                height={18}
-                className="w-[18px] h-[18px] opacity-30"
-              />
-              Play Store
-              <span className="absolute -top-2 -right-2 text-[10px] font-semibold bg-primary/80 text-white px-1.5 py-0.5 rounded-full leading-none">
-                Soon
-              </span>
-            </span>
-          </div>
+        <p className="mt-14 text-[15px] font-extrabold">아직 앱이 없다면</p>
+        <div className="mt-4 flex w-full flex-col items-center gap-3 sm:flex-row sm:justify-center">
+          <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" className="btn btn-ink w-full justify-center sm:w-auto">
+            App Store에서 받기
+          </a>
+          <span className="flex items-center gap-3">
+            <span className="btn btn-quiet cursor-default opacity-60" aria-disabled="true">Google Play</span>
+            <span className="stamp">곧 열려요</span>
+          </span>
         </div>
 
-        <p className="mt-8 text-xs text-white/40 leading-relaxed">
-          버튼을 눌러도 열리지 않으면 HIS 앱을 최신 버전으로 업데이트한 뒤 다시
-          눌러주세요.
+        <p className="mt-10 text-[13px] leading-relaxed text-[var(--faint)]">
+          단추를 눌러도 열리지 않으면 HIS 앱을 최신 버전으로 업데이트한 뒤 다시 눌러 주세요.
         </p>
       </div>
-    </section>
+    </PaperPage>
   );
 }

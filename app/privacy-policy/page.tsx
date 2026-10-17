@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
+import { PaperPage } from "../components/PaperPage";
 
 export const metadata: Metadata = {
   title: "Privacy Policy - Inland His Church",
   description: "Privacy Policy for HIS App by Inland His Church",
 };
 
-export default function PrivacyPolicy() {
+function PrivacyPolicyBody() {
   return (
     <div
-      className="max-w-4xl mx-auto px-6 py-16 md:py-24"
+      className="mx-auto max-w-4xl"
       dangerouslySetInnerHTML={{ __html: `<style>
     [data-custom-class='body'], [data-custom-class='body'] * {
             background: transparent !important;
@@ -65,5 +66,13 @@ export default function PrivacyPolicy() {
         </div>
         <br><div><span data-custom-class='body_text'>This Privacy Policy was created using Termly's </span><a href="https://termly.io/products/privacy-policy-generator/" target="_blank" rel="noopener external" data-custom-class='link'>Privacy Policy Generator</a></div>` }}
     />
+  );
+}
+
+export default function PrivacyPolicy() {
+  return (
+    <PaperPage light homeLabel="Home">
+      <PrivacyPolicyBody />
+    </PaperPage>
   );
 }
