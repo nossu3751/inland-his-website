@@ -7,6 +7,7 @@ import { PaperPage } from "../../components/PaperPage";
 // HIS 앱 공유 링크가 도착하는 페이지.
 //   https://www.inlandhis.com/app/post/<게시글 id>
 //   https://www.inlandhis.com/app/event?id=<회차 id>&eventId=<이벤트 id>
+//   https://www.inlandhis.com/app/letgo/<초대 번호>  (내려놓기 방 링크 초대 → 앱 /letgo/join?code=…)
 // 카카오톡·문자는 앱 전용 주소(inlandhisapp://)를 링크로 만들어 주지 않아서, 앱은 이 https 주소를 공유하고
 // 이 페이지의 버튼이 앱을 연다. 앱이 없으면 스토어로 안내한다.
 // (다음 앱 스토어 배포에서 유니버설 링크를 붙이면, 앱이 설치된 사람은 이 페이지 없이 바로 앱이 열린다.)
@@ -16,6 +17,8 @@ const APP_STORE_URL =
   "https://apps.apple.com/us/app/%ED%9E%88%EC%A6%88%EC%95%B1/id6746176604";
 // 주소에 들어오는 값은 그대로 앱 주소가 되므로 id 모양(영문·숫자·-)만 받는다
 const ID_PATTERN = /^[A-Za-z0-9-]{1,64}$/;
+// 내려놓기 방 초대 번호 (앱 lib/app-link.ts 와 같은 모양: 영문 · 숫자만)
+const LETGO_CODE_PATTERN = /^[A-Za-z0-9]{1,32}$/;
 
 type Props = {
   params: Promise<{ path: string[] }>;
@@ -37,6 +40,14 @@ async function resolveTarget(
       label: "게시글",
       deepLink: `${APP_SCHEME}:///post/${path[1]}`,
       title: await getPublicPostTitle(path[1]),
+    };
+  }
+  if (path[0] === "letgo" && path.length === 2 && LETGO_CODE_PATTERN.test(path[1])) {
+    // 방 이름은 미리 보여 주지 않는다 (교인끼리의 방 — 앱에서 로그인한 뒤에 보인다)
+    return {
+      label: "내려놓기 방",
+      deepLink: `${APP_SCHEME}:///letgo/join?code=${path[1]}`,
+      title: null,
     };
   }
   if (path[0] === "event" && path.length === 1) {
