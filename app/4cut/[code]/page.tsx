@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PaperPage } from "../../components/PaperPage";
 import { getBoothShot } from "./lookup";
-import { SaveButtons } from "./SaveButtons";
+import { BoothReceive } from "./BoothReceive";
 
 // 인생네컷 사진 받기: https://www.inlandhis.com/4cut/<번호>
 // 앱의 부스(태블릿)가 결과 화면에 QR 로 보이는 주소. 앱 링크(/app/…) 밖이라 손님 폰에서는 앱이 아니라 이 페이지가 열린다
 // — 앱이 없는 사람도 받는다. 사진은 7일 뒤 서버에서 지워진다.
+// 2026-10-22: 사진과 움직이는 네컷(영상)을 한 페이지에서 둘 다 받는다 (부스의 사진 · 영상 탭은 없앴다).
 
 type Props = { params: Promise<{ code: string }> };
 
@@ -53,20 +54,19 @@ export default async function BoothShotPage({ params }: Props) {
       <div className="mx-auto flex max-w-md flex-col items-center text-center">
         <h1 className="page-title text-[30px]">{label} 인생네컷</h1>
         <p className="mt-2 text-[16px] font-bold text-[var(--soft)]">{day(shot.takenAt, "ko-KR")}</p>
-        {/* 저장소의 사진을 그대로 (크기를 바꾸면 화질이 떨어진다) */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={shot.photoUrl}
-          alt={`${label} 인생네컷`}
-          className="mt-7 max-h-[68vh] w-auto max-w-full shadow-[0_18px_36px_-18px_rgb(31_26_41/0.55)]"
+        {/* 사진 · 움직이는 네컷을 나란히, 저장 단추는 각각 (움직이는 네컷이 없는 사진은 사진만) */}
+        <BoothReceive
+          label={label}
+          photoUrl={shot.photoUrl}
+          downloadUrl={shot.downloadUrl}
+          clipUrls={shot.clipUrls}
+          clipFps={shot.clipFps}
+          clipPending={shot.clipPending}
         />
-        <div className="mt-8 w-full">
-          <SaveButtons photoUrl={shot.photoUrl} downloadUrl={shot.downloadUrl} pageUrl={`https://www.inlandhis.com/4cut/${code}`} />
-        </div>
         <p className="mt-6 text-[14px] leading-relaxed text-[var(--faint)]">
-          {day(shot.expiresAt, "ko-KR")}까지 받을 수 있어요. 그 뒤에는 사진이 지워져요.
+          {day(shot.expiresAt, "ko-KR")}까지 받을 수 있어요. 그 뒤에는 지워져요.
           <br />
-          Save it by {day(shot.expiresAt, "en-US")} — the photo is deleted after that.
+          Save it by {day(shot.expiresAt, "en-US")} — it’s deleted after that.
         </p>
         <Link href="/#app" className="mt-10 text-[15px] font-extrabold text-[var(--soft)] no-underline hover:text-[var(--ink)]">
           히즈 앱에서 더 보기 →
