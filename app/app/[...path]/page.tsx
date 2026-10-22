@@ -8,6 +8,7 @@ import { PaperPage } from "../../components/PaperPage";
 //   https://www.inlandhis.com/app/post/<게시글 id>
 //   https://www.inlandhis.com/app/event?id=<회차 id>&eventId=<이벤트 id>
 //   https://www.inlandhis.com/app/letgo/<초대 번호>  (내려놓기 방 링크 초대 → 앱 /letgo/join?code=…)
+//   https://www.inlandhis.com/app/booth/remote?c=<연결 번호>  (인생네컷 부스의 리모컨 QR → 앱 /booth/remote?c=…)
 // 카카오톡·문자는 앱 전용 주소(inlandhisapp://)를 링크로 만들어 주지 않아서, 앱은 이 https 주소를 공유하고
 // 이 페이지의 버튼이 앱을 연다. 앱이 없으면 스토어로 안내한다.
 // (다음 앱 스토어 배포에서 유니버설 링크를 붙이면, 앱이 설치된 사람은 이 페이지 없이 바로 앱이 열린다.)
@@ -19,6 +20,8 @@ const APP_STORE_URL =
 const ID_PATTERN = /^[A-Za-z0-9-]{1,64}$/;
 // 내려놓기 방 초대 번호 (앱 lib/app-link.ts 와 같은 모양: 영문 · 숫자만)
 const LETGO_CODE_PATTERN = /^[A-Za-z0-9]{1,32}$/;
+// 인생네컷 리모컨 연결 번호 (앱 lib/booth/session.ts isPairCode 와 같은 모양: 헷갈리는 0 O 1 I 없이 6자)
+const BOOTH_PAIR_PATTERN = /^[A-HJ-NP-Z2-9]{6}$/;
 
 type Props = {
   params: Promise<{ path: string[] }>;
@@ -47,6 +50,15 @@ async function resolveTarget(
     return {
       label: "내려놓기 방",
       deepLink: `${APP_SCHEME}:///letgo/join?code=${path[1]}`,
+      title: null,
+    };
+  }
+  if (path[0] === "booth" && path[1] === "remote" && path.length === 2) {
+    const code = first(search.c);
+    if (!code || !BOOTH_PAIR_PATTERN.test(code)) return null;
+    return {
+      label: "인생네컷 리모컨",
+      deepLink: `${APP_SCHEME}:///booth/remote?c=${code}`,
       title: null,
     };
   }
