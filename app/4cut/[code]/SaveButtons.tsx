@@ -64,7 +64,8 @@ export function SaveButtons({ photoUrl, downloadUrl, pageUrl }: { photoUrl: stri
   return (
     <div className="w-full">
       <div className="flex w-full gap-3">
-        <button type="button" onClick={save} className="btn btn-primary flex-1 justify-center text-[17px]">
+        {/* 부스와 같은 산호색 (시안 받기 웹페이지) */}
+        <button type="button" onClick={save} className="btn flex-1 justify-center bg-[#D9573A] text-[17px] text-white hover:bg-[#C2482C]">
           사진 저장
         </button>
         <button type="button" onClick={send} className="btn btn-quiet justify-center px-7 text-[17px]">

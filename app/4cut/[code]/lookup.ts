@@ -13,6 +13,7 @@ export type BoothShot = {
   downloadUrl: string;
   eventLabel: string | null;
   eventLabelEn: string | null;
+  takenAt: string;
   expiresAt: string;
 };
 
@@ -51,6 +52,7 @@ export async function getBoothShot(code: string): Promise<BoothShot | null> {
       downloadUrl: `${photoUrl}?download=his-4cut.jpg`,
       eventLabel: row.event_label,
       eventLabelEn: row.event_label_en,
+      takenAt: row.created_at,
       expiresAt: row.expires_at,
     };
   } catch {

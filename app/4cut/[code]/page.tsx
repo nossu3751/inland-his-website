@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { PaperPage } from "../../components/PaperPage";
 import { getBoothShot } from "./lookup";
 import { SaveButtons } from "./SaveButtons";
@@ -45,12 +46,13 @@ export default async function BoothShotPage({ params }: Props) {
     );
   }
 
+  // 시안(받기 웹페이지): "할렐루야 나잇 인생네컷" + 찍은 날
   const label = shot.eventLabel ?? "히즈";
   return (
     <PaperPage>
       <div className="mx-auto flex max-w-md flex-col items-center text-center">
-        <p className="text-[14px] font-extrabold text-[var(--accent-text)]">{label}</p>
-        <h1 className="page-title mt-2 text-[30px]">인생네컷</h1>
+        <h1 className="page-title text-[30px]">{label} 인생네컷</h1>
+        <p className="mt-2 text-[16px] font-bold text-[var(--soft)]">{day(shot.takenAt, "ko-KR")}</p>
         {/* 저장소의 사진을 그대로 (크기를 바꾸면 화질이 떨어진다) */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -66,6 +68,9 @@ export default async function BoothShotPage({ params }: Props) {
           <br />
           Save it by {day(shot.expiresAt, "en-US")} — the photo is deleted after that.
         </p>
+        <Link href="/#app" className="mt-10 text-[15px] font-extrabold text-[var(--soft)] no-underline hover:text-[var(--ink)]">
+          히즈 앱에서 더 보기 →
+        </Link>
       </div>
     </PaperPage>
   );
