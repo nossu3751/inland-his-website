@@ -30,9 +30,29 @@ const day = (iso: string, locale: string) =>
 
 export default async function BoothShotPage({ params }: Props) {
   const { code } = await params;
-  const shot = await getBoothShot(code);
+  const lookup = await getBoothShot(code);
 
-  if (!shot) {
+  // 서버를 잠깐 읽지 못했다 (행사장 와이파이 · 서버) — 지워졌다고 하지 않고 다시 열게
+  if (lookup.kind === "error") {
+    return (
+      <PaperPage>
+        <div className="mx-auto flex max-w-md flex-col items-center text-center">
+          <h1 className="page-title text-[30px]">잠깐 불러오지 못했어요</h1>
+          <p className="mt-5 text-[16px] leading-relaxed text-[var(--soft)]">
+            사진은 그대로 있어요. 잠시 뒤 다시 열어 주세요.
+            <br />
+            Couldn’t load your photo just now. Please try again.
+          </p>
+          {/* 같은 주소를 새로 연다 (서버에서 다시 읽는다) */}
+          <a href={`/4cut/${code}`} className="btn mt-8 justify-center bg-[#D9573A] px-8 text-[16px] font-black text-white no-underline hover:bg-[#C2482C]">
+            다시 열기
+          </a>
+        </div>
+      </PaperPage>
+    );
+  }
+
+  if (lookup.kind === "missing") {
     return (
       <PaperPage>
         <div className="mx-auto flex max-w-md flex-col items-center text-center">
@@ -47,6 +67,7 @@ export default async function BoothShotPage({ params }: Props) {
     );
   }
 
+  const { shot } = lookup;
   // 시안(받기 웹페이지): "할렐루야 나잇 인생네컷" + 찍은 날
   const label = shot.eventLabel ?? "히즈";
   return (
