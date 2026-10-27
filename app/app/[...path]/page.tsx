@@ -9,6 +9,7 @@ import { PaperPage } from "../../components/PaperPage";
 //   https://www.inlandhis.com/app/event?id=<회차 id>&eventId=<이벤트 id>
 //   https://www.inlandhis.com/app/letgo/<초대 번호>  (내려놓기 방 링크 초대 → 앱 /letgo/join?code=…)
 //   https://www.inlandhis.com/app/booth/remote?c=<연결 번호>  (인생네컷 부스의 리모컨 QR → 앱 /booth/remote?c=…)
+//   https://www.inlandhis.com/app/play/<게임>/<초대 번호>  (같이 놀기 초대 — 말씀 씨름 · 말씀 OX · 양 오목 → 앱 /pet/join?code=…)
 // 카카오톡·문자는 앱 전용 주소(inlandhisapp://)를 링크로 만들어 주지 않아서, 앱은 이 https 주소를 공유하고
 // 이 페이지의 버튼이 앱을 연다. 앱이 없으면 스토어로 안내한다.
 // (다음 앱 스토어 배포에서 유니버설 링크를 붙이면, 앱이 설치된 사람은 이 페이지 없이 바로 앱이 열린다.)
@@ -22,14 +23,17 @@ const ID_PATTERN = /^[A-Za-z0-9-]{1,64}$/;
 const LETGO_CODE_PATTERN = /^[A-Za-z0-9]{1,32}$/;
 // 인생네컷 리모컨 연결 번호 (앱 lib/booth/session.ts isPairCode 와 같은 모양: 헷갈리는 0 O 1 I 없이 6자)
 const BOOTH_PAIR_PATTERN = /^[A-HJ-NP-Z2-9]{6}$/;
+// 같이 놀기 초대 (앱 lib/pet/game-invite.ts · lib/app-link.ts 와 같은 모양: 게임 셋, 번호는 영문 소문자 · 숫자 12자)
+const PLAY_CODE_PATTERN = /^[a-z0-9]{12}$/;
+const PLAY_GAMES: Record<string, string> = { wrestle: "말씀 씨름", ox: "말씀 OX", omok: "양 오목" };
 
 type Props = {
   params: Promise<{ path: string[] }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-// title: 전체공개 글·공개 일정일 때만 (그 밖에는 null → 일반 문구)
-type Target = { label: string; deepLink: string; title: string | null };
+// title: 전체공개 글·공개 일정일 때만 (그 밖에는 null → 일반 문구). heading · body · description: 그 링크만의 문구 (없으면 일반 문구)
+type Target = { label: string; deepLink: string; title: string | null; heading?: string; body?: string; description?: string };
 
 const first = (value: string | string[] | undefined) =>
   Array.isArray(value) ? value[0] : value;
@@ -62,6 +66,17 @@ async function resolveTarget(
       title: null,
     };
   }
+  if (path[0] === "play" && path.length === 3 && Object.hasOwn(PLAY_GAMES, path[1]) && PLAY_CODE_PATTERN.test(path[2])) {
+    // 누가 불렀는지는 보여 주지 않는다 (교인끼리의 놀이 — 앱에서 로그인한 뒤에 보인다). 게임 이름만
+    return {
+      label: "놀이 초대",
+      deepLink: `${APP_SCHEME}:///pet/join?code=${path[2]}`,
+      title: `${PLAY_GAMES[path[1]]} 초대`,
+      heading: "HIS 앱에서 같이 놀아요",
+      body: "아래 단추를 누르면 HIS 앱에서 초대 화면이 바로 열려요. 누가 불렀는지는 앱에서 보여요.",
+      description: "교회 친구가 HIS 앱 펫 놀이에 초대했어요. 눌러서 같이 해요.",
+    };
+  }
   if (path[0] === "event" && path.length === 1) {
     const id = first(search.id);
     const eventId = first(search.eventId);
@@ -86,9 +101,9 @@ export async function generateMetadata({
   const title = target
     ? (target.title ?? `HIS 앱에서 ${target.label} 보기`)
     : "HIS 앱";
-  const description = target?.title
-    ? `HIS 앱에 올라온 ${target.label}이에요. 눌러서 앱에서 열어보세요.`
-    : "인랜드 히즈 청년부 앱에서 열어보세요.";
+  const description =
+    target?.description ??
+    (target?.title ? `HIS 앱에 올라온 ${target.label}이에요. 눌러서 앱에서 열어보세요.` : "인랜드 히즈 청년부 앱에서 열어보세요.");
   return {
     metadataBase: new URL("https://www.inlandhis.com"),
     title,
@@ -112,12 +127,12 @@ export default async function OpenInAppPage({ params, searchParams }: Props) {
     <PaperPage>
       <div className="mx-auto flex max-w-md flex-col items-center text-center">
         <Image src="/app/app-icon.png" alt="HIS 앱" width={96} height={96} className="size-24 rounded-[22px] shadow-[0_12px_24px_-12px_rgb(31_26_41/0.5)]" priority />
-        <h1 className="page-title mt-7 text-[30px]">HIS 앱에서 {target.label} 보기</h1>
+        <h1 className="page-title mt-7 text-[30px]">{target.heading ?? `HIS 앱에서 ${target.label} 보기`}</h1>
         {target.title && (
           <p className="mt-5 w-full rounded-2xl bg-[var(--paper)] px-5 py-4 font-serif text-[18px] leading-relaxed">{target.title}</p>
         )}
         <p className="mt-4 text-[16px] leading-relaxed text-[var(--soft)]">
-          아래 단추를 누르면 HIS 앱에서 이 {target.label}이 바로 열려요.
+          {target.body ?? `아래 단추를 누르면 HIS 앱에서 이 ${target.label}이 바로 열려요.`}
         </p>
         <a href={target.deepLink} className="btn btn-primary mt-8 w-full justify-center text-[17px]">
           HIS 앱에서 열기
