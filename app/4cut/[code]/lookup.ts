@@ -10,8 +10,12 @@ const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
 // 번호는 서버(photo_booth_code)가 영문 · 숫자 16자로 만든다
 export const CODE_PATTERN = /^[A-Za-z0-9]{16}$/;
 
-/** 부스가 움직이는 네컷을 다 올리기까지 기다리는 시간 — 이 뒤에도 없으면 사진만 (만들지 못했거나 예전 사진) */
-export const CLIP_WAIT_MS = 3 * 60 * 1000;
+/**
+ * 부스가 움직이는 네컷을 다 올리기까지 기다리는 시간 — 이 뒤에도 없으면 사진만 (만들지 못했거나 예전 사진).
+ * 번호를 만든 때부터 센다: 부스는 합친 사진(2~3MB)을 먼저 올리고 그림 25장을 이어 올리며, 장마다 세 번까지 다시 올린다.
+ * 3분이던 때는 행사장 와이파이가 느리면 영상이 올라오기 전에 페이지가 '사진만'으로 바뀌어 영상 단추가 사라졌다 (2026-10-28 점검)
+ */
+export const CLIP_WAIT_MS = 10 * 60 * 1000;
 
 export type BoothShot = {
   photoUrl: string;
