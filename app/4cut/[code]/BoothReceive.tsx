@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 // 인생네컷 받기 (시안 "받기 웹페이지": 사진 띠 + 사진 저장 · 움직이는 띠 + 영상 저장, 2026-10-22 사용자 "스캔해서 이동한 페이지에서 사진 영상 둘 다").
@@ -261,13 +260,17 @@ function ClipCanvas({ urls, fps, label, onFile, onState }: { urls: string[]; fps
 const FRAME_SHADOW = "shadow-[0_18px_36px_-18px_rgb(31_26_41/0.55)]";
 
 export function BoothReceive({
+  code,
   label,
   photoUrl,
   downloadUrl,
-  clipUrls,
-  clipFps,
-  clipPending,
+  clipUrls: firstClipUrls,
+  clipFps: firstClipFps,
+  clipPending: firstClipPending,
+  clipWaitUntil,
 }: {
+  /** 사진 번호 — 움직이는 네컷을 기다리는 동안 /4cut/<번호>/clip 을 읽는다 */
+  code: string;
   label: string;
   photoUrl: string;
   downloadUrl: string;
@@ -275,8 +278,12 @@ export function BoothReceive({
   clipFps: number;
   /** 움직이는 네컷이 아직 올라오는 중 (찍은 지 얼마 안 됐다) — 잠깐씩 다시 읽는다 */
   clipPending: boolean;
+  /** 움직이는 네컷을 기다리는 끝 (ms) */
+  clipWaitUntil: number;
 }) {
-  const router = useRouter();
+  // 움직이는 네컷 (처음엔 서버가 그린 값, 기다리는 동안 /clip 으로 읽은 값)
+  const [clip, setClip] = useState({ urls: firstClipUrls, fps: firstClipFps, pending: firstClipPending });
+  const { urls: clipUrls, fps: clipFps, pending: clipPending } = clip;
   const photoFile = useRef<File | null>(null);
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [clipState, setClipState] = useState<ClipState>("loading");
@@ -297,9 +304,30 @@ export function BoothReceive({
 
   useEffect(() => {
     if (!clipPending) return;
-    const id = window.setInterval(() => router.refresh(), POLL_MS);
-    return () => window.clearInterval(id);
-  }, [clipPending, router]);
+    // 읽힌 때만 바꾼다 (잠깐 못 읽으면 그대로 두고 다음 차례에) · 탭이 숨어 있으면 쉰다
+    let alive = true;
+    const read = async () => {
+      // 손님 폰이 계속 못 읽어도 서버가 기다리는 때가 지나면 사진만으로
+      if (Date.now() > clipWaitUntil) {
+        setClip((current) => ({ ...current, pending: false }));
+        return;
+      }
+      if (document.hidden) return;
+      try {
+        const res = await fetch(`/4cut/${code}/clip`, { cache: "no-store" });
+        if (!res.ok) return;
+        const next = (await res.json()) as { kind: string; clipUrls?: string[] | null; clipFps?: number; clipPending?: boolean };
+        if (alive && next.kind === "found") setClip({ urls: next.clipUrls ?? null, fps: next.clipFps ?? 10, pending: !!next.clipPending });
+      } catch {
+        // 손님 폰의 네트워크가 잠깐 끊겼다 — 다음 차례에
+      }
+    };
+    const id = window.setInterval(() => void read(), POLL_MS);
+    return () => {
+      alive = false;
+      window.clearInterval(id);
+    };
+  }, [clipPending, clipWaitUntil, code]);
 
   const savePhoto = async () => {
     setNote(null);

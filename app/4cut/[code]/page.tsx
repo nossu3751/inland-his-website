@@ -77,12 +77,14 @@ export default async function BoothShotPage({ params }: Props) {
         <p className="mt-2 text-[16px] font-bold text-[var(--soft)]">{day(shot.takenAt, "ko-KR")}</p>
         {/* 사진 · 움직이는 네컷을 나란히, 저장 단추는 각각 (움직이는 네컷이 없는 사진은 사진만) */}
         <BoothReceive
+          code={code}
           label={label}
           photoUrl={shot.photoUrl}
           downloadUrl={shot.downloadUrl}
           clipUrls={shot.clipUrls}
           clipFps={shot.clipFps}
           clipPending={shot.clipPending}
+          clipWaitUntil={shot.clipWaitUntil}
         />
         <p className="mt-6 text-[14px] leading-relaxed text-[var(--faint)]">
           {day(shot.expiresAt, "ko-KR")}까지 받을 수 있어요. 그 뒤에는 지워져요.

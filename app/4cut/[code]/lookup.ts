@@ -31,6 +31,8 @@ export type BoothShot = {
   clipFps: number;
   /** 움직이는 네컷이 아직 올라오는 중 (찍은 지 CLIP_WAIT_MS 안) — 페이지가 잠깐씩 다시 읽는다 */
   clipPending: boolean;
+  /** 움직이는 네컷을 기다리는 끝 (번호를 만든 때 + CLIP_WAIT_MS, ms) */
+  clipWaitUntil: number;
 };
 
 type Row = {
@@ -111,5 +113,6 @@ function shotOf(row: Row): BoothShot {
     clipFps: row.clip_fps && row.clip_fps > 0 ? row.clip_fps : 10,
     // 장수가 적혀 있는데 1 이하면 부스가 '못 만들었음'을 적은 것 (앱 NO_CLIP_FRAMES) — 기다리지 않고 사진만
     clipPending: !clipUrls && row.clip_frames == null && Date.now() - Date.parse(row.created_at) < CLIP_WAIT_MS,
+    clipWaitUntil: Date.parse(row.created_at) + CLIP_WAIT_MS,
   };
 }
