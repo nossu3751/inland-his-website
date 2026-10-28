@@ -13,7 +13,8 @@ export const CODE_PATTERN = /^[A-Za-z0-9]{16}$/;
 /**
  * 부스가 움직이는 네컷을 다 올리기까지 기다리는 시간 — 이 뒤에도 없으면 사진만 (만들지 못했거나 예전 사진).
  * 번호를 만든 때부터 센다: 부스는 합친 사진(2~3MB)을 먼저 올리고 그림 25장을 이어 올리며, 장마다 세 번까지 다시 올린다.
- * 3분이던 때는 행사장 와이파이가 느리면 영상이 올라오기 전에 페이지가 '사진만'으로 바뀌어 영상 단추가 사라졌다 (2026-10-28 점검)
+ * 3분이던 때는 행사장 와이파이가 느리면 영상이 올라오기 전에 페이지가 '사진만'으로 바뀌어 영상 단추가 사라졌다 (2026-10-28 점검).
+ * 부스가 영상이 없거나 못 만들면 장수 1 을 적는다 — 그때는 기다리지 않는다
  */
 export const CLIP_WAIT_MS = 10 * 60 * 1000;
 
@@ -108,6 +109,7 @@ function shotOf(row: Row): BoothShot {
     expiresAt: row.expires_at,
     clipUrls,
     clipFps: row.clip_fps && row.clip_fps > 0 ? row.clip_fps : 10,
-    clipPending: !clipUrls && Date.now() - Date.parse(row.created_at) < CLIP_WAIT_MS,
+    // 장수가 적혀 있는데 1 이하면 부스가 '못 만들었음'을 적은 것 (앱 NO_CLIP_FRAMES) — 기다리지 않고 사진만
+    clipPending: !clipUrls && row.clip_frames == null && Date.now() - Date.parse(row.created_at) < CLIP_WAIT_MS,
   };
 }
