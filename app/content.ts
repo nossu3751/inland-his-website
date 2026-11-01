@@ -21,6 +21,8 @@ export const PLACE = {
 export const LINKS = {
   youtube: "https://www.youtube.com/@inland_his",
   appStore: "https://apps.apple.com/us/app/%ED%9E%88%EC%A6%88%EC%95%B1/id6746176604",
+  // 안드로이드 정식 출시 (2026-11-01)
+  playStore: "https://play.google.com/store/apps/details?id=com.inlandhisapp",
   church: links.external[0].url,
   social: links.social,
   phone: "510-579-0192",
@@ -139,8 +141,7 @@ export const COPY = {
       title: "교회 생활을 손안에, 히즈앱",
       body: "주보, 일일 QT, 성경, 일정, 교회 소식을 한 앱에서 봐요. 홈 화면 위젯으로 오늘의 말씀도 바로 꺼내요.",
       appStore: "App Store에서 받기",
-      play: "Google Play",
-      soon: "곧 열려요",
+      play: "Google Play에서 받기",
       shots: ["홈 화면", "주보", "성경"],
       widget: "홈 화면 위젯",
     },
@@ -243,8 +244,7 @@ export const COPY = {
       title: "Church life in your pocket: the HIS app",
       body: "The bulletin, daily QT, the Bible, the calendar and church news in one app. A home screen widget brings up today's verse.",
       appStore: "Download on the App Store",
-      play: "Google Play",
-      soon: "Coming soon",
+      play: "Get it on Google Play",
       shots: ["Home", "Bulletin", "Bible"],
       widget: "Home screen widget",
     },

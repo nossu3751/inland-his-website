@@ -17,6 +17,8 @@ import { PaperPage } from "../../components/PaperPage";
 const APP_SCHEME = "inlandhisapp";
 const APP_STORE_URL =
   "https://apps.apple.com/us/app/%ED%9E%88%EC%A6%88%EC%95%B1/id6746176604";
+// 안드로이드 정식 출시 (2026-11-01)
+const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.inlandhisapp";
 // 주소에 들어오는 값은 그대로 앱 주소가 되므로 id 모양(영문·숫자·-)만 받는다
 const ID_PATTERN = /^[A-Za-z0-9-]{1,64}$/;
 // 내려놓기 방 초대 번호 (앱 lib/app-link.ts 와 같은 모양: 영문 · 숫자만)
@@ -143,10 +145,9 @@ export default async function OpenInAppPage({ params, searchParams }: Props) {
           <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" className="btn btn-ink w-full justify-center sm:w-auto">
             App Store에서 받기
           </a>
-          <span className="flex items-center gap-3">
-            <span className="btn btn-quiet cursor-default opacity-60" aria-disabled="true">Google Play</span>
-            <span className="stamp">곧 열려요</span>
-          </span>
+          <a href={PLAY_STORE_URL} target="_blank" rel="noopener noreferrer" className="btn btn-ink w-full justify-center sm:w-auto">
+            Google Play에서 받기
+          </a>
         </div>
 
         <p className="mt-10 text-[13px] leading-relaxed text-[var(--faint)]">
