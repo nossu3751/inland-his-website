@@ -222,6 +222,23 @@ a { text-underline-offset: 0.22em; text-decoration-thickness: 0.08em; }
   .page-title { font-weight: 800; font-size: clamp(30px, 3.6vw, 48px); line-height: 1.16; letter-spacing: -0.035em; text-wrap: balance; }
   .paper-light { background: var(--bg); }
   .tint { background: var(--paper); }
+
+  /* 열매맺음 리유니온 방문 페이지 (/app/visit/reunion) — 수련회 포스터 색: 크림 종이 · 짙은 초록 글 · 빨간 마커 · 노란 형광펜 · 분홍 바탕 */
+  .reunion { --r-ink: #364743; --r-soft: #5f6c68; --r-red: #d8245a; --r-yellow: #f7ee86; --r-pink: #f3e8e7; --r-cream: #fdfbf7; color: var(--r-ink); }
+  .reunion .r-pink { background: var(--r-pink); }
+  .reunion .r-cream { background: var(--r-cream); }
+  .reunion .r-soft { color: var(--r-soft); }
+  .reunion .r-hl { box-shadow: inset 0 -0.55em 0 var(--r-yellow); padding: 0 0.12em; }
+  .reunion .r-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 0 20px; border-radius: 999px; font-weight: 800; font-size: 16px; text-decoration: none; background: var(--r-ink); color: #fff; transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s; }
+  .reunion .r-btn:hover { transform: translateY(-2px); background: #2b3a37; }
+  .reunion .r-btn-soft { background: #fff; color: var(--r-ink); }
+  .reunion .r-btn-soft:hover { background: #fff; }
+  .reunion .r-fruit { position: absolute; height: auto; pointer-events: none; user-select: none; animation: r-bob 5.6s ease-in-out infinite; }
+  .reunion .r-pixel { image-rendering: pixelated; }
+  .reunion .r-pet { animation: r-hop 2.4s steps(1, end) infinite; }
+  .reunion .r-stamp { display: grid; place-items: center; border-radius: 999px; background: var(--r-red); color: #fff; font-weight: 900; transform: rotate(-12deg); animation: thunk-scroll 0.7s cubic-bezier(0.2, 1.4, 0.4, 1) both; }
+  @keyframes r-bob { 0%, 100% { translate: 0 0; } 50% { translate: 0 -6px; } }
+  @keyframes r-hop { 0%, 100% { translate: 0 0; } 50% { translate: 0 -2px; } }
 }
 
 @media (prefers-reduced-motion: reduce) {
