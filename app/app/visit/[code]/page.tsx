@@ -9,7 +9,8 @@ import { getVisitBulletins, getVisitEvent, isJoinOpen, type VisitEvent } from ".
 // 행사 방문 페이지: https://www.inlandhis.com/app/visit/<code> (짧은 주소 /reunion → /app/visit/reunion)
 // 2026-11-04 사용자 "리유니온 같은 경우 다른 교회에서도 방문해서 히즈앱에 가입 · 리유니온 쪽에 그 주보들만 노출".
 // 앱이 깔린 폰은 유니버설 링크(/app/*)로 이 페이지 없이 앱의 방문 가입(/visit?code=…)이 열린다.
-// 앱이 없으면 여기서 받고 → 다시 QR 을 찍거나 '앱에서 열기'. 행사 카테고리의 주보(순서지)는 앱 없이도 여기서 읽는다.
+// 앱이 없으면 여기서 받고 → 한 번 열어 둔 뒤 다시 QR 을 찍거나 '앱에서 열기'. 행사 카테고리의 주보(순서지)는 앱 없이도 여기서 읽는다.
+// (스토어에 든 안드로이드 1.3.2(23)는 깐 뒤 첫 실행을 링크로 하면 한 번 꺼진다 — 앱 84890a0 에서 고침, 새 스토어 빌드 전까지 "먼저 한 번 열기")
 // 서버: visit_event (join_from ~ join_until 이면 인리치 승인 없이 손님으로 바로), bulletin_v2.category_id.
 
 const APP_SCHEME = "inlandhisapp";
@@ -281,11 +282,11 @@ export default async function VisitPage({ params, searchParams }: Props) {
             <p className="r-soft mt-3 text-[15px] leading-relaxed">
               {joinOpen
                 ? en
-                  ? "After installing, scan this QR code again or tap the button. You can start right away — no approval wait."
-                  : "앱을 받은 뒤 이 QR을 한 번 더 찍거나 이 단추를 눌러 주세요. 승인을 기다리지 않고 바로 시작해요."
+                  ? "After installing, open the app once first. Then scan this QR code again or tap the button — you can start right away, no approval wait."
+                  : "앱을 받으면 먼저 한 번 열어 주세요. 그다음 이 QR을 다시 찍거나 이 단추를 누르면 승인을 기다리지 않고 바로 시작해요."
                 : en
-                  ? "After installing, scan this QR code again or tap the button to sign up in the app."
-                  : "앱을 받은 뒤 이 QR을 한 번 더 찍거나 이 단추를 눌러 앱에서 가입해 주세요."}
+                  ? "After installing, open the app once first. Then scan this QR code again or tap the button to sign up in the app."
+                  : "앱을 받으면 먼저 한 번 열어 주세요. 그다음 이 QR을 다시 찍거나 이 단추를 눌러 앱에서 가입해 주세요."}
             </p>
           </div>
         </section>
